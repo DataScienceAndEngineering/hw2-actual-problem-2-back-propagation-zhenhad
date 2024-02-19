@@ -43,11 +43,19 @@ The forward propagation step will not require the addition of a bias vector sinc
 The backpropagation step must be adjusted to handle the matrix-based approach and to consider the modified structure of the weight matrices.
 ### Testing: 
 Test the network on the Iris dataset with the specified architecture.
-Step 1: Augment the Input Data\
+
+Step 1: Augment the Input Data
+
 First, we need to load the Iris dataset and augment the input data. We'll use a Python library, such as scikit-learn, to load the dataset and then modify it accordingly.
-Step 2: Modify the Network Structure\
+
+Step 2: Modify the Network Structure
+
 We'll define a class Network that will represent our neural network. This class will need methods for initializing the network, forward propagation, and backpropagation.
-Step 3 and 4: Adjust Forward Propagation and Modify Backpropagation\
+
+Step 3 and 4: Adjust Forward Propagation and Modify Backpropagation
+
 These steps will be integrated into the Network class methods.
-Step 5: Testing\
+
+Step 5: Testing
+
 Finally, we'll test the network on the Iris dataset.
