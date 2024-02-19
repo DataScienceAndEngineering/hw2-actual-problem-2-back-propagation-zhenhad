@@ -17,9 +17,9 @@ Your submission should be a single jupyter notebook. Use markdown cells with lat
 . Again use markdown cells around your code and comments to explain your work. Test the code on the iris data set with 4 node input (5 with a constant 1), three hidden nodes, and three output nodes, one for each species/class.
 
 a. Proof of Michael Nielsons equation BP3
-https://latexbase.com/d/28841636-da66-4195-80c4-eff28732d6bb
+https://latexbase.com/d/28841636-da66-4195-80c4-eff28732d6bb \\
 b. Proof of Michael Nielsons equation BP4
-https://latexbase.com/d/28841636-da66-4195-80c4-eff28732d6bb
+https://latexbase.com/d/28841636-da66-4195-80c4-eff28732d6bb \\
 c. Using both markdown cells and code cells implement that you code a fully matrix-based approach to backpropagation over a mini-batch. Implement this with explanation where you change the notation so that instead of having a bias term, you assume that the input variables are augmented with a "column" of "1"s, and that the weights 
 .
 
