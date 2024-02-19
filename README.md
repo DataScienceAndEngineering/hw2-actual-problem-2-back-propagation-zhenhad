@@ -59,3 +59,114 @@ These steps will be integrated into the Network class methods.
 Step 5: Testing
 
 Finally, we'll test the network on the Iris dataset.
+
+```
+import numpy as np
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+
+# Load Iris dataset
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# One hot encoding for the output labels
+encoder = OneHotEncoder(sparse=False)
+y = y.reshape(-1, 1)
+y = encoder.fit_transform(y)
+
+# Adding a column of ones to the input data for the bias term
+X = np.c_[X, np.ones(X.shape[0])]
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+class Network(object):
+
+    def __init__(self, sizes):
+        # Initialize the network with random weights and biases
+        self.num_layers = len(sizes)
+        self.sizes = sizes
+        self.weights = [np.random.randn(y, x)
+                        for x, y in zip(sizes[:-1], sizes[1:])]
+
+    def feedforward(self, a):
+        # Return the output of the network for input 'a'
+        for w in self.weights:
+            a = sigmoid(np.dot(w, a))
+        return a
+
+    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
+        # Train the network using mini-batch stochastic gradient descent
+        training_data = list(training_data)
+        n = len(training_data)
+
+        if test_data:
+            test_data = list(test_data)
+            n_test = len(test_data)
+
+        for j in range(epochs):
+            np.random.shuffle(training_data)
+            mini_batches = [
+                training_data[k:k+mini_batch_size]
+                for k in range(0, n, mini_batch_size)]
+
+            for mini_batch in mini_batches:
+                self.update_mini_batch(mini_batch, eta)
+
+            if test_data:
+                accuracy = self.evaluate(test_data) / n_test
+                print(f"Epoch {j}: {accuracy * 100:.2f}% accuracy")
+            else:
+                print(f"Epoch {j} complete")
+
+    def update_mini_batch(self, mini_batch, eta):
+        # Update the network's weights by applying gradient descent using backpropagation
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        for x, y in mini_batch:
+            delta_nabla_w = self.backprop(x, y)
+            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
+        self.weights = [w-(eta/len(mini_batch))*nw for w, nw in zip(self.weights, nabla_w)]
+
+    def backprop(self, x, y):
+        # Return a tuple representing the gradient for the cost function
+        nabla_w = [np.zeros(w.shape) for w in self.weights]
+        # feedforward
+        activation = x
+        activations = [x] # list to store all the activations
+        # backward pass
+        delta = self.cost_derivative(activations[-1], y)
+        nabla_w[-1] = np.dot(delta, activations[-2].transpose())
+        for l in range(2, self.num_layers):
+            z = np.dot(self.weights[-l+1].transpose(), activations[-l-1])
+            sp = sigmoid_prime(z)
+            delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
+            nabla_w[-l] = np.dot(delta, activations[-l-1].transpose())
+        return nabla_w
+
+    def evaluate(self, test_data):
+        # Return the number of test inputs for which the neural network outputs the correct result
+        test_results = [(np.argmax(self.feedforward(x)), np.argmax(y))
+                        for (x, y) in test_data]
+        return sum(int(x == y) for (x, y) in test_results)
+
+    def cost_derivative(self, output_activations, y):
+        # Return the vector of partial derivatives for the output activations
+        return (output_activations-y)
+
+# Helper functions
+def sigmoid(z):
+    return 1.0/(1.0+np.exp(-z))
+
+def sigmoid_prime(z):
+    return sigmoid(z)*(1-sigmoid(z))
+
+# Network configuration: 5 input nodes (4 features + 1 bias term), 3 hidden nodes, and 3 output nodes
+net = Network([5, 3, 3])
+
+# Train the network
+training_data = zip(X_train, y_train)
+test_data = zip(X_test, y_test)
+net.SGD(training_data, 30, 10, 0.1, test_data=test_data)
+```
