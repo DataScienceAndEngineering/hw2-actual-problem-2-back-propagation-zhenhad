@@ -1,8 +1,10 @@
 
-HW2: Problem 2: Working out Backpropagation
+# HW2: Problem 2: Working out Backpropagation
+
 Read Chapter 2 of Michael Nielsen's article/book from top to bottom:
 
 http://neuralnetworksanddeeplearning.com/chap2.html
+
 He outlines a few exersizes in that article which you must complete. Do the following a, b, c:
 
 a. He invites you to write out a proof of equation BP3
